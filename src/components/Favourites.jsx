@@ -1,19 +1,43 @@
 import { ListGroup } from "react-bootstrap";
-
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { StarFill } from "react-bootstrap-icons";
+import { Container, Row, Col, Button, ListGroupItem,} from "react-bootstrap";
+import { Link } from "react-router-dom";
+import { ADD_TO_FAVOURITE } from "../redux/actions";
 const Favourites = () => {
 
-    return (
-        <>
-        {['sm', 'md', 'lg', 'xl', 'xxl'].map((breakpoint) => (
-          <ListGroup key={breakpoint} horizontal={breakpoint} className="my-2">
-            <ListGroup.Item>This ListGroup</ListGroup.Item>
-            <ListGroup.Item>renders horizontally</ListGroup.Item>
-            <ListGroup.Item>on {breakpoint}</ListGroup.Item>
-            <ListGroup.Item>and above!</ListGroup.Item>
-          </ListGroup>
-        ))}
-      </>
-    );
-  }
+    const favourites = useSelector((state) => state.favourites.list)
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
 
-  export default Favourites
+    console.log(favourites)
+
+    return (
+      <Container>
+      <Row>
+        <Col xs={10} className="mx-auto my-3">
+          <h1>Favourites</h1>
+          <Button onClick={() => navigate('/')}>Home</Button>
+        </Col>
+        <Col xs={10} className="mx-auto my-3">
+          <ListGroup>
+            {favourites.map((fav, i) => (
+              <ListGroupItem key={i}>
+                <StarFill
+                  className="mr-2"
+                  onClick={() =>
+                    dispatch(ADD_TO_FAVOURITE(fav))
+                  }
+                />
+                <Link to={'/' + fav}>{fav}</Link>
+              </ListGroupItem>
+            ))}
+          </ListGroup>
+        </Col>
+      </Row>
+    </Container>
+  )
+}
+
+export default Favourites
